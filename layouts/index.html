@@ -9,7 +9,10 @@
                {{ if eq .Params.covermeta "out" }}hasCoverMetaOut{{ else }}hasCoverMetaIn{{ end }}
                {{ with .Params.coverCaption }}hasCoverCaption{{ end }}">
         <section class="postShorten-group main-content-wrap">
-          {{ $paginator := .Paginate (where .Site.RegularPages "Type" "post") }}
+          {{ $v1 := where .Site.RegularPages "Type" "post" }}
+          {{ $v2 := where .Site.RegularPages "Params.series" "not in" site.Params.altSeries }}
+          {{ $v3 := where .Site.RegularPages "Params.series" "==" nil }}
+          {{ $paginator := .Paginate ($v1 | intersect ($v2 | union $v3)) }}
           {{ range $paginator.Pages }}
             {{ .Render "summary" }}
           {{ end }}
